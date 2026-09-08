@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chá da Érica — Lista de Presentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fbf6ee;
+    --card:#ffffff;
+    --rust:#b8503e;
+    --rust-dark:#96392a;
+    --sage:#5b6e4f;
+    --sage-dark:#455439;
+    --ink:#3c2f26;
+    --muted:#8f8377;
+    --border:#e8ddd0;
+    --done-bg:#f4ede2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Karla', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    padding:0 0 60px;
+  }
+  .gingham{
+    height:14px;
+    background-color:var(--cream);
+    background-image:
+      linear-gradient(45deg, var(--rust) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--rust) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--rust) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--rust) 75%);
+    background-size:14px 14px;
+    background-position:0 0, 0 7px, 7px -7px, -7px 0px;
+    opacity:0.55;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:0 16px;}
+  .hero{
+    text-align:center;
+    padding:34px 16px 26px;
+  }
+  .hero .kicker{
+    font-family:'Karla', sans-serif;
+    font-size:0.78rem;
+    letter-spacing:0.04em;
+    color:var(--rust-dark);
+    margin:0 0 6px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:2.1rem;
+    line-height:1.15;
+    margin:0 0 4px;
+    color:var(--ink);
+  }
+  .subtitle{
+    color:var(--muted);
+    font-size:0.94rem;
+    margin:10px auto 0;
+    max-width:420px;
+    line-height:1.5;
+  }
+  .event-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:18px 20px;
+    margin:22px 0 20px;
+  }
+  .event-row{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:9px 0;
+  }
+  .event-row + .event-row{border-top:1px solid var(--border);}
+  .event-icon{
+    width:30px;height:30px;flex:0 0 30px;
+    border-radius:50%;
+    background:var(--done-bg);
+    display:flex;align-items:center;justify-content:center;
+    font-size:0.95rem;
+  }
+  .event-text .label{
+    font-size:0.72rem;
+    color:var(--muted);
+    margin:0 0 1px;
+  }
+  .event-text .value{
+    font-size:0.96rem;
+    font-weight:500;
+    color:var(--ink);
+  }
+  .swatches{display:inline-flex;gap:8px;vertical-align:middle;margin-left:8px;}
+  .swatch{width:14px;height:14px;border-radius:50%;display:inline-block;border:1px solid var(--border);}
+  .swatch.black{background:#2a2420;}
+  .swatch.sheer{background:transparent;border:1.5px dashed var(--muted);}
+
+  .name-box{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:18px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    position:sticky;
+    top:10px;
+    z-index:5;
+    box-shadow:0 4px 14px rgba(60,47,38,0.07);
+  }
+  .name-box label{font-size:0.85rem;color:var(--muted);white-space:nowrap;}
+  .name-box input{
+    flex:1;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:9px 10px;
+    font-size:0.95rem;
+    font-family:'Karla', sans-serif;
+    outline:none;
+    background:var(--cream);
+    color:var(--ink);
+  }
+  .name-box input:focus{border-color:var(--rust);}
+
+  .progress-wrap{margin-bottom:16px;}
+  .progress-label{
+    text-align:center;
+    font-size:0.85rem;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+  .progress-track{
+    height:8px;
+    background:var(--done-bg);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--sage);
+    border-radius:6px;
+    transition:width .3s ease;
+  }
+
+  ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
+  li{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-left:4px solid var(--rust);
+    border-radius:10px;
+    padding:12px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    transition:background .2s ease, border-color .2s ease;
+  }
+  li.done{background:var(--done-bg);border-left-color:var(--sage);}
+  .item-info{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;}
+  .item-name{font-weight:500;font-size:0.98rem;}
+  .item-name.done-text{color:var(--muted);text-decoration:line-through;}
+  .claimed-by{font-size:0.82rem;color:var(--sage-dark);display:flex;align-items:center;gap:5px;}
+  button{
+    border:none;
+    border-radius:8px;
+    padding:8px 14px;
+    font-size:0.85rem;
+    font-weight:500;
+    font-family:'Karla', sans-serif;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .btn-claim{
+    background:var(--rust);
+    color:#fff;
+  }
+  .btn-claim:hover{background:var(--rust-dark);}
+  .btn-claim:disabled{
+    background:#ddd;
+    color:#999;
+    cursor:not-allowed;
+  }
+  .btn-release{
+    background:transparent;
+    color:var(--muted);
+    border:1px solid var(--border);
+  }
+  .btn-release:hover{border-color:var(--muted);}
+  .status{
+    text-align:center;
+    color:var(--muted);
+    font-size:0.85rem;
+    margin-top:10px;
+    min-height:18px;
+  }
+  .loading{text-align:center;color:var(--muted);padding:40px 0;}
+  .footer-note{
+    text-align:center;
+    font-size:0.82rem;
+    color:var(--muted);
+    margin-top:28px;
+    line-height:1.6;
+  }
+</style>
+</head>
+<body>
+<div class="gingham"></div>
+<div class="wrap">
+  <div class="hero">
+    <p class="kicker">Chá de panela</p>
+    <h1>Chá da Érica</h1>
+    <p class="subtitle">Escolha um item para levar. Assim que você confirmar, todo mundo vê que já foi escolhido.</p>
+  </div>
+
+  <div class="event-card">
+    <div class="event-row">
+      <div class="event-icon">🗓️</div>
+      <div class="event-text">
+        <div class="label">Data</div>
+        <div class="value">Sábado, 12 de setembro de 2026</div>
+      </div>
+    </div>
+    <div class="event-row">
+      <div class="event-icon">🕑</div>
+      <div class="event-text">
+        <div class="label">Horário</div>
+        <div class="value">16h</div>
+      </div>
+    </div>
+    <div class="event-row">
+      <div class="event-icon">📍</div>
+      <div class="event-text">
+        <div class="label">Local</div>
+        <div class="value">Clube Comercial</div>
+      </div>
+    </div>
+    <div class="event-row">
+      <div class="event-icon">🎀</div>
+      <div class="event-text">
+        <div class="label">Cores do traje</div>
+        <div class="value">Preta ou transparente<span class="swatches"><span class="swatch black"></span><span class="swatch sheer"></span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="name-box">
+    <label for="myname">Seu nome:</label>
+    <input id="myname" type="text" placeholder="Digite seu nome aqui">
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label" id="progress"></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div id="loading" class="loading">Carregando lista...</div>
+  <ul id="list" style="display:none;"></ul>
+  <div class="status" id="status"></div>
+
+  <div class="footer-note">Com carinho, esperamos vocês para celebrar essa nova fase 💛</div>
+</div>
+
+<script>
+const STORAGE_KEY = 'presentes-lista-v1';
+
+const defaultItems = [
+  {id:1, name:"Forma de gelo", claimedBy:"Andreia Pineiro"},
+  {id:2, name:"Faqueiro", claimedBy:null},
+  {id:3, name:"4 pratos rasos", claimedBy:null},
+  {id:4, name:"4 pratos fundos", claimedBy:null},
+  {id:5, name:"Garrafa de café (preta)", claimedBy:"Raquel"},
+  {id:6, name:"Jogo de copos", claimedBy:"Simone"},
+  {id:7, name:"Assadeira antiaderente", claimedBy:null},
+  {id:8, name:"Lixeira de pia", claimedBy:null},
+  {id:9, name:"Escorredor de pratos", claimedBy:null},
+  {id:10, name:"Jarra de vidro", claimedBy:"Maria Clara"},
+  {id:11, name:"Concha e escumadeira", claimedBy:null},
+  {id:12, name:"Tábua de carne", claimedBy:"Jane"},
+  {id:13, name:"Copo medidor", claimedBy:null},
+  {id:14, name:"Travessa refratário", claimedBy:"Andreia Pinheiro"},
+  {id:15, name:"Escorredor de arroz", claimedBy:null},
+  {id:16, name:"Panela de pressão", claimedBy:null},
+  {id:17, name:"Porta detergente", claimedBy:null},
+  {id:18, name:"Frigideira antiaderente", claimedBy:null},
+  {id:19, name:"Chaleira", claimedBy:"Alciria"},
+  {id:20, name:"Bacia grande", claimedBy:"Bacia"},
+  {id:21, name:"Balde grande", claimedBy:null},
+  {id:22, name:"Balde grande", claimedBy:null},
+  {id:23, name:"Vassoura", claimedBy:null},
+  {id:24, name:"Rodo", claimedBy:null},
+  {id:25, name:"Pá de lixo com cabo", claimedBy:null},
+  {id:26, name:"Tábua de passar roupa", claimedBy:null},
+  {id:27, name:"Jogo de toalha", claimedBy:null},
+  {id:28, name:"Jogo de banheiro", claimedBy:null},
+  {id:29, name:"Tapete", claimedBy:null},
+  {id:30, name:"Toalha de mesa", claimedBy:null},
+  {id:31, name:"Tabuleiro", claimedBy:null},
+  {id:32, name:"Forma de pudim", claimedBy:"Monica"},
+  {id:33, name:"Peneira", claimedBy:null},
+  {id:34, name:"Garrafa de água (vidro)", claimedBy:null},
+  {id:35, name:"Cesto de roupa", claimedBy:null},
+  {id:36, name:"Varal de chão", claimedBy:null},
+  {id:37, name:"Jarra de suco (vidro)", claimedBy:null},
+  {id:38, name:"Tapete de banheiro", claimedBy:null},
+  {id:39, name:"10 cabides", claimedBy:null},
+  {id:40, name:"Relógio de parede", claimedBy:null},
+  {id:41, name:"Jogo de lençol (Queen)", claimedBy:"Eloá"},
+  {id:42, name:"Forma de bolo", claimedBy:null},
+  {id:43, name:"Escorredor de pratos", claimedBy:null},
+  {id:44, name:"Jogo americano", claimedBy:null},
+  {id:45, name:"Jogo de banheiro", claimedBy:null},
+  {id:46, name:"Cesto de roupa", claimedBy:null},
+  {id:47, name:"Cesto de lixo", claimedBy:null},
+  {id:48, name:"Luva térmica", claimedBy:null},
+  {id:49, name:"Peneira", claimedBy:null},
+  {id:50, name:"Escorredor de macarrão", claimedBy:null}
+];
+
+const listEl = document.getElementById('list');
+const loadingEl = document.getElementById('loading');
+const statusEl = document.getElementById('status');
+const progressEl = document.getElementById('progress');
+const progressFillEl = document.getElementById('progressFill');
+const nameInput = document.getElementById('myname');
+
+nameInput.addEventListener('input', () => {
+  window.__myname = nameInput.value;
+});
+
+async function loadItems(){
+  try{
+    const result = await window.storage.get(STORAGE_KEY, true);
+    if(result && result.value){
+      return JSON.parse(result.value);
+    }
+    return null;
+  }catch(e){
+    return null;
+  }
+}
+
+async function saveItems(items){
+  try{
+    await window.storage.set(STORAGE_KEY, JSON.stringify(items), true);
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+async function init(){
+  let items = await loadItems();
+  if(!items){
+    items = defaultItems;
+    await saveItems(items);
+  }
+  render(items);
+  loadingEl.style.display = 'none';
+  listEl.style.display = 'flex';
+}
+
+function render(items){
+  updateProgress(items);
+  listEl.innerHTML = '';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    if(item.claimedBy) li.classList.add('done');
+
+    const info = document.createElement('div');
+    info.className = 'item-info';
+
+    const nameEl = document.createElement('div');
+    nameEl.className = 'item-name' + (item.claimedBy ? ' done-text' : '');
+    nameEl.textContent = item.name;
+    info.appendChild(nameEl);
+
+    if(item.claimedBy){
+      const claimedEl = document.createElement('div');
+      claimedEl.className = 'claimed-by';
+      claimedEl.textContent = '✓ ' + item.claimedBy;
+      info.appendChild(claimedEl);
+    }
+
+    li.appendChild(info);
+
+    const btn = document.createElement('button');
+    if(item.claimedBy){
+      btn.textContent = 'Liberar';
+      btn.className = 'btn-release';
+      btn.onclick = () => releaseItem(item.id);
+    } else {
+      btn.textContent = 'Eu levo!';
+      btn.className = 'btn-claim';
+      btn.onclick = () => claimItem(item.id);
+    }
+    li.appendChild(btn);
+
+    listEl.appendChild(li);
+  });
+}
+
+function updateProgress(items){
+  const total = items.length;
+  const done = items.filter(i => i.claimedBy).length;
+  progressEl.textContent = `${done} de ${total} itens já escolhidos`;
+  const pct = total ? Math.round((done/total)*100) : 0;
+  progressFillEl.style.width = pct + '%';
+}
+
+async function claimItem(id){
+  const name = (nameInput.value || '').trim();
+  if(!name){
+    statusEl.textContent = 'Digite seu nome antes de escolher um item.';
+    nameInput.focus();
+    return;
+  }
+  statusEl.textContent = 'Salvando...';
+  const items = await loadItems() || defaultItems;
+  const item = items.find(i => i.id === id);
+  if(item && item.claimedBy){
+    statusEl.textContent = 'Ops, alguém acabou de pegar esse item. Atualizando lista...';
+    render(items);
+    return;
+  }
+  if(item) item.claimedBy = name;
+  const ok = await saveItems(items);
+  statusEl.textContent = ok ? `Prontinho, ${name}! Item reservado.` : 'Erro ao salvar, tente novamente.';
+  render(items);
+}
+
+async function releaseItem(id){
+  statusEl.textContent = 'Atualizando...';
+  const items = await loadItems() || defaultItems;
+  const item = items.find(i => i.id === id);
+  if(item) item.claimedBy = null;
+  const ok = await saveItems(items);
+  statusEl.textContent = ok ? 'Item liberado.' : 'Erro ao salvar, tente novamente.';
+  render(items);
+}
+
+init();
+</script>
+</body>
+</html>
