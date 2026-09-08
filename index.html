@@ -270,209 +270,192 @@
   <div class="footer-note">Com carinho, esperamos vocês para celebrar essa nova fase 💛</div>
 </div>
 
-<script>
-const STORAGE_KEY = 'presentes-lista-v1';
-
-const defaultItems = [
-  {id:1, name:"Forma de gelo", claimedBy:"Andreia Pineiro"},
-  {id:2, name:"Faqueiro", claimedBy:null},
-  {id:3, name:"4 pratos rasos", claimedBy:null},
-  {id:4, name:"4 pratos fundos", claimedBy:null},
-  {id:5, name:"Garrafa de café (preta)", claimedBy:"Raquel"},
-  {id:6, name:"Jogo de copos", claimedBy:"Simone"},
-  {id:7, name:"Assadeira antiaderente", claimedBy:null},
-  {id:8, name:"Lixeira de pia", claimedBy:null},
-  {id:9, name:"Escorredor de pratos", claimedBy:null},
-  {id:10, name:"Jarra de vidro", claimedBy:"Maria Clara"},
-  {id:11, name:"Concha e escumadeira", claimedBy:null},
-  {id:12, name:"Tábua de carne", claimedBy:"Jane"},
-  {id:13, name:"Copo medidor", claimedBy:null},
-  {id:14, name:"Travessa refratário", claimedBy:"Andreia Pinheiro"},
-  {id:15, name:"Escorredor de arroz", claimedBy:null},
-  {id:16, name:"Panela de pressão", claimedBy:null},
-  {id:17, name:"Porta detergente", claimedBy:null},
-  {id:18, name:"Frigideira antiaderente", claimedBy:null},
-  {id:19, name:"Chaleira", claimedBy:"Alciria"},
-  {id:20, name:"Bacia grande", claimedBy:"Bacia"},
-  {id:21, name:"Balde grande", claimedBy:null},
-  {id:22, name:"Balde grande", claimedBy:null},
-  {id:23, name:"Vassoura", claimedBy:null},
-  {id:24, name:"Rodo", claimedBy:null},
-  {id:25, name:"Pá de lixo com cabo", claimedBy:null},
-  {id:26, name:"Tábua de passar roupa", claimedBy:null},
-  {id:27, name:"Jogo de toalha", claimedBy:null},
-  {id:28, name:"Jogo de banheiro", claimedBy:null},
-  {id:29, name:"Tapete", claimedBy:null},
-  {id:30, name:"Toalha de mesa", claimedBy:null},
-  {id:31, name:"Tabuleiro", claimedBy:null},
-  {id:32, name:"Forma de pudim", claimedBy:"Monica"},
-  {id:33, name:"Peneira", claimedBy:null},
-  {id:34, name:"Garrafa de água (vidro)", claimedBy:null},
-  {id:35, name:"Cesto de roupa", claimedBy:null},
-  {id:36, name:"Varal de chão", claimedBy:null},
-  {id:37, name:"Jarra de suco (vidro)", claimedBy:null},
-  {id:38, name:"Tapete de banheiro", claimedBy:null},
-  {id:39, name:"10 cabides", claimedBy:null},
-  {id:40, name:"Relógio de parede", claimedBy:null},
-  {id:41, name:"Jogo de lençol (Queen)", claimedBy:"Eloá"},
-  {id:42, name:"Forma de bolo", claimedBy:null},
-  {id:43, name:"Escorredor de pratos", claimedBy:null},
-  {id:44, name:"Jogo americano", claimedBy:null},
-  {id:45, name:"Jogo de banheiro", claimedBy:null},
-  {id:46, name:"Cesto de roupa", claimedBy:null},
-  {id:47, name:"Cesto de lixo", claimedBy:null},
-  {id:48, name:"Luva térmica", claimedBy:null},
-  {id:49, name:"Peneira", claimedBy:null},
-  {id:50, name:"Escorredor de macarrão", claimedBy:null}
-];
-
-const listEl = document.getElementById('list');
-const loadingEl = document.getElementById('loading');
-const statusEl = document.getElementById('status');
-const progressEl = document.getElementById('progress');
-const progressFillEl = document.getElementById('progressFill');
-const nameInput = document.getElementById('myname');
-
-nameInput.addEventListener('input', () => {
-  window.__myname = nameInput.value;
-});
-
-async function loadItems(){
-  try{
-    const result = await window.storage.get(STORAGE_KEY, true);
-    if(result && result.value){
-      return JSON.parse(result.value);
-    }
-    return null;
-  }catch(e){
-    return null;
-  }
-}
-
-async function saveItems(items){
-  try{
-    await window.storage.set(STORAGE_KEY, JSON.stringify(items), true);
-    return true;
-  }catch(e){
-    return false;
-  }
-}
-
-async function init(){
-  let items = await loadItems();
-  if(!items){
-    items = defaultItems;
-    await saveItems(items);
-  }
-  render(items);
-  loadingEl.style.display = 'none';
-  listEl.style.display = 'flex';
-}
-
-function render(items){
-  updateProgress(items);
-  listEl.innerHTML = '';
-  items.forEach(item => {
-    const li = document.createElement('li');
-    if(item.claimedBy) li.classList.add('done');
-
-    const info = document.createElement('div');
-    info.className = 'item-info';
-
-    const nameEl = document.createElement('div');
-    nameEl.className = 'item-name' + (item.claimedBy ? ' done-text' : '');
-    nameEl.textContent = item.name;
-    info.appendChild(nameEl);
-
-    if(item.claimedBy){
-      const claimedEl = document.createElement('div');
-      claimedEl.className = 'claimed-by';
-      claimedEl.textContent = '✓ ' + item.claimedBy;
-      info.appendChild(claimedEl);
-    }
-
-    li.appendChild(info);
-
-    const btn = document.createElement('button');
-    if(item.claimedBy){
-      btn.textContent = 'Liberar';
-      btn.className = 'btn-release';
-      btn.onclick = () => releaseItem(item.id);
-    } else {
-      btn.textContent = 'Eu levo!';
-      btn.className = 'btn-claim';
-      btn.onclick = () => claimItem(item.id);
-    }
-    li.appendChild(btn);
-
-    listEl.appendChild(li);
-  });
-}
-
-function updateProgress(items){
-  const total = items.length;
-  const done = items.filter(i => i.claimedBy).length;
-  progressEl.textContent = `${done} de ${total} itens já escolhidos`;
-  const pct = total ? Math.round((done/total)*100) : 0;
-  progressFillEl.style.width = pct + '%';
-}
-
-async function claimItem(id){
-  const name = (nameInput.value || '').trim();
-  if(!name){
-    statusEl.textContent = 'Digite seu nome antes de escolher um item.';
-    nameInput.focus();
-    return;
-  }
-  statusEl.textContent = 'Salvando...';
-  const items = await loadItems() || defaultItems;
-  const item = items.find(i => i.id === id);
-  if(item && item.claimedBy){
-    statusEl.textContent = 'Ops, alguém acabou de pegar esse item. Atualizando lista...';
-    render(items);
-    return;
-  }
-  if(item) item.claimedBy = name;
-  const ok = await saveItems(items);
-  statusEl.textContent = ok ? `Prontinho, ${name}! Item reservado.` : 'Erro ao salvar, tente novamente.';
-  render(items);
-}
-
-async function releaseItem(id){
-  statusEl.textContent = 'Atualizando...';
-  const items = await loadItems() || defaultItems;
-  const item = items.find(i => i.id === id);
-  if(item) item.claimedBy = null;
-  const ok = await saveItems(items);
-  statusEl.textContent = ok ? 'Item liberado.' : 'Erro ao salvar, tente novamente.';
-  render(items);
-}
-
-init();
-</script>
-  <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, get, set, update, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
-  apiKey: "AIzaSyDbaIOevxzsjWtDdqsAWswSlLkMvgKtcl8",
-  authDomain: "cha-de-panela-ed072.firebaseapp.com",
-  databaseURL: "https://cha-de-panela-ed072-default-rtdb.firebaseio.com",
-  projectId: "cha-de-panela-ed072",
-  storageBucket: "cha-de-panela-ed072.firebasestorage.app",
-  messagingSenderId: "859517372199",
-  appId: "1:859517372199:web:f1a2d3d05451ba4f374b02"
+    apiKey: "AIzaSyDbaIOevxzsjWtDdqsAWswSlLkMvgKtcl8",
+    authDomain: "cha-de-panela-ed072.firebaseapp.com",
+    databaseURL: "https://cha-de-panela-ed072-default-rtdb.firebaseio.com",
+    projectId: "cha-de-panela-ed072",
+    storageBucket: "cha-de-panela-ed072.firebasestorage.app",
+    messagingSenderId: "859517372199",
+    appId: "1:859517372199:web:f1a2d3d05451ba4f374b02"
   };
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
+  const presentesRef = ref(db, 'presentes');
 
-  // Torna disponível pro resto do seu script
-  window.dbRef = ref;
-  window.dbSet = set;
-  window.dbOnValue = onValue;
-  window.database = db;
+  const defaultItems = [
+    {id:1, name:"Forma de gelo", claimedBy:"Andreia Pineiro"},
+    {id:2, name:"Faqueiro", claimedBy:null},
+    {id:3, name:"4 pratos rasos", claimedBy:null},
+    {id:4, name:"4 pratos fundos", claimedBy:null},
+    {id:5, name:"Garrafa de café (preta)", claimedBy:"Raquel"},
+    {id:6, name:"Jogo de copos", claimedBy:"Simone"},
+    {id:7, name:"Assadeira antiaderente", claimedBy:null},
+    {id:8, name:"Lixeira de pia", claimedBy:null},
+    {id:9, name:"Escorredor de pratos", claimedBy:null},
+    {id:10, name:"Jarra de vidro", claimedBy:"Maria Clara"},
+    {id:11, name:"Concha e escumadeira", claimedBy:null},
+    {id:12, name:"Tábua de carne", claimedBy:"Jane"},
+    {id:13, name:"Copo medidor", claimedBy:null},
+    {id:14, name:"Travessa refratário", claimedBy:"Andreia Pinheiro"},
+    {id:15, name:"Escorredor de arroz", claimedBy:null},
+    {id:16, name:"Panela de pressão", claimedBy:null},
+    {id:17, name:"Porta detergente", claimedBy:null},
+    {id:18, name:"Frigideira antiaderente", claimedBy:null},
+    {id:19, name:"Chaleira", claimedBy:"Alciria"},
+    {id:20, name:"Bacia grande", claimedBy:"Bacia"},
+    {id:21, name:"Balde grande", claimedBy:null},
+    {id:22, name:"Balde grande", claimedBy:null},
+    {id:23, name:"Vassoura", claimedBy:null},
+    {id:24, name:"Rodo", claimedBy:null},
+    {id:25, name:"Pá de lixo com cabo", claimedBy:null},
+    {id:26, name:"Tábua de passar roupa", claimedBy:null},
+    {id:27, name:"Jogo de toalha", claimedBy:null},
+    {id:28, name:"Jogo de banheiro", claimedBy:null},
+    {id:29, name:"Tapete", claimedBy:null},
+    {id:30, name:"Toalha de mesa", claimedBy:null},
+    {id:31, name:"Tabuleiro", claimedBy:null},
+    {id:32, name:"Forma de pudim", claimedBy:"Monica"},
+    {id:33, name:"Peneira", claimedBy:null},
+    {id:34, name:"Garrafa de água (vidro)", claimedBy:null},
+    {id:35, name:"Cesto de roupa", claimedBy:null},
+    {id:36, name:"Varal de chão", claimedBy:null},
+    {id:37, name:"Jarra de suco (vidro)", claimedBy:null},
+    {id:38, name:"Tapete de banheiro", claimedBy:null},
+    {id:39, name:"10 cabides", claimedBy:null},
+    {id:40, name:"Relógio de parede", claimedBy:null},
+    {id:41, name:"Jogo de lençol (Queen)", claimedBy:"Eloá"},
+    {id:42, name:"Forma de bolo", claimedBy:null},
+    {id:43, name:"Escorredor de pratos", claimedBy:null},
+    {id:44, name:"Jogo americano", claimedBy:null},
+    {id:45, name:"Jogo de banheiro", claimedBy:null},
+    {id:46, name:"Cesto de roupa", claimedBy:null},
+    {id:47, name:"Cesto de lixo", claimedBy:null},
+    {id:48, name:"Luva térmica", claimedBy:null},
+    {id:49, name:"Peneira", claimedBy:null},
+    {id:50, name:"Escorredor de macarrão", claimedBy:null}
+  ];
+
+  const listEl = document.getElementById('list');
+  const loadingEl = document.getElementById('loading');
+  const statusEl = document.getElementById('status');
+  const progressEl = document.getElementById('progress');
+  const progressFillEl = document.getElementById('progressFill');
+  const nameInput = document.getElementById('myname');
+
+  let currentItems = [];
+
+  async function seedIfEmpty(){
+    const snapshot = await get(presentesRef);
+    if(!snapshot.exists()){
+      const obj = {};
+      defaultItems.forEach(item => {
+        obj[item.id] = { name: item.name, claimedBy: item.claimedBy };
+      });
+      await set(presentesRef, obj);
+    }
+  }
+
+  function updateProgress(items){
+    const total = items.length;
+    const done = items.filter(i => i.claimedBy).length;
+    progressEl.textContent = `${done} de ${total} itens já escolhidos`;
+    const pct = total ? Math.round((done/total)*100) : 0;
+    progressFillEl.style.width = pct + '%';
+  }
+
+  function render(items){
+    updateProgress(items);
+    listEl.innerHTML = '';
+    items.forEach(item => {
+      const li = document.createElement('li');
+      if(item.claimedBy) li.classList.add('done');
+
+      const info = document.createElement('div');
+      info.className = 'item-info';
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'item-name' + (item.claimedBy ? ' done-text' : '');
+      nameEl.textContent = item.name;
+      info.appendChild(nameEl);
+
+      if(item.claimedBy){
+        const claimedEl = document.createElement('div');
+        claimedEl.className = 'claimed-by';
+        claimedEl.textContent = '✓ ' + item.claimedBy;
+        info.appendChild(claimedEl);
+      }
+
+      li.appendChild(info);
+
+      const btn = document.createElement('button');
+      if(item.claimedBy){
+        btn.textContent = 'Liberar';
+        btn.className = 'btn-release';
+        btn.onclick = () => releaseItem(item.id);
+      } else {
+        btn.textContent = 'Eu levo!';
+        btn.className = 'btn-claim';
+        btn.onclick = () => claimItem(item.id);
+      }
+      li.appendChild(btn);
+
+      listEl.appendChild(li);
+    });
+  }
+
+  async function claimItem(id){
+    const name = (nameInput.value || '').trim();
+    if(!name){
+      statusEl.textContent = 'Digite seu nome antes de escolher um item.';
+      nameInput.focus();
+      return;
+    }
+    const item = currentItems.find(i => i.id === id);
+    if(item && item.claimedBy){
+      statusEl.textContent = 'Ops, alguém acabou de pegar esse item.';
+      return;
+    }
+    statusEl.textContent = 'Salvando...';
+    try{
+      await update(ref(db, 'presentes/' + id), { claimedBy: name });
+      statusEl.textContent = `Prontinho, ${name}! Item reservado.`;
+    }catch(e){
+      statusEl.textContent = 'Erro ao salvar, tente novamente.';
+    }
+  }
+
+  async function releaseItem(id){
+    statusEl.textContent = 'Atualizando...';
+    try{
+      await update(ref(db, 'presentes/' + id), { claimedBy: null });
+      statusEl.textContent = 'Item liberado.';
+    }catch(e){
+      statusEl.textContent = 'Erro ao salvar, tente novamente.';
+    }
+  }
+
+  async function init(){
+    await seedIfEmpty();
+    onValue(presentesRef, (snapshot) => {
+      const data = snapshot.val() || {};
+      currentItems = Object.keys(data).map(id => ({
+        id: Number(id),
+        name: data[id].name,
+        claimedBy: data[id].claimedBy || null
+      })).sort((a,b) => a.id - b.id);
+      render(currentItems);
+      loadingEl.style.display = 'none';
+      listEl.style.display = 'flex';
+    });
+  }
+
+  init();
 </script>
 </body>
 </html>
